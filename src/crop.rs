@@ -38,10 +38,8 @@ pub fn run(path: &str, top: &str, right: &str, bottom: &str, left: &str, output:
     
     let new_path: String;
     if output == "" {
-        println!("hi");
         new_path = path_split.join("/") + "/" + filename + "_cropped." + ext;
     } else {
-        println!("hey");
         new_path = output.to_owned()
     }
     let (new_width, new_height) = cropped.dimensions();
