@@ -5,11 +5,15 @@ use image::GenericImageView;
 fn clean_arg(arg: &str, dim: u32) -> u32 {
     let mut value: u32 = 0;
     let re_per = Regex::new(r"^\d+%").unwrap();
+    let re_em = Regex::new(r"^\d+em").unwrap();
     let re_pix = Regex::new(r"^\d+(px)?").unwrap();
     if re_per.is_match(arg) {
         // If percentage given, calc value relative to image dimension
         value = arg.replace("%", "").parse::<u32>().unwrap();
         value *= dim / 100;
+    } else if re_em.is_match(arg) {
+        value = arg.replace("em", "").parse::<u32>().unwrap();
+        value *= 16;  // Convert to pixels
     } else if re_pix.is_match(arg) {
         value = arg.replace("px", "").parse::<u32>().unwrap();
     }
@@ -17,7 +21,7 @@ fn clean_arg(arg: &str, dim: u32) -> u32 {
 }
 
 pub fn run(path: &str, top: &str, right: &str, bottom: &str, left: &str, output: &str) {
-    
+
     let mut img = image::open(&Path::new(path)).unwrap();
     let (width, height) = img.dimensions();
     
