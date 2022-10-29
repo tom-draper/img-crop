@@ -12,7 +12,7 @@ cargo build --release
 
 ## Usage
 
-The image path must be specified each time using the -i flag. The cropping of specific sides can be specified with the -t, -b, -l and -r flags. Crop values can be specified as a percentage, or as an amount of pixels with an optional "px" postfix.
+The image path must be specified each time using the -i flag. Cropping is specified with an edge flag (-t, -b, -l or -r) followed by a crop value. Crop values can be a percentage, or an amount of pixels with an optional "px" postfix.
 
 The command below would crop 10 pixels off the top, 15 pixels of off the right and 20% of the left of the image.
 
