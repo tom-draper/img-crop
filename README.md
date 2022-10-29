@@ -1,4 +1,4 @@
-# Image Crops
+# Image Crop
 
 A Rust-based CLI tool to perform fast image crops.
 
