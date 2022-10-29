@@ -21,7 +21,6 @@ fn clean_arg(arg: &str, dim: u32) -> u32 {
 }
 
 pub fn run(path: &str, top: &str, right: &str, bottom: &str, left: &str, output: &str) {
-
     let mut img = image::open(&Path::new(path)).unwrap();
     let (width, height) = img.dimensions();
     

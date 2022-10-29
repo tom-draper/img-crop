@@ -24,7 +24,6 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-
     let path = &*args.input;
     let top = &*args.top;
     let right = &*args.right;
