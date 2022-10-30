@@ -1,6 +1,6 @@
 # Image Crop
 
-A Rust-based tool to perform fast image crops from the command line.
+A Rust-based tool to perform fast image crops from the command-line.
 
 ## Installation
 
