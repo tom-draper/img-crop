@@ -17,6 +17,13 @@ struct Args {
     output: String,
 }
 
+fn valid_path(path: String) -> bool {
+    let _path = Path::new(&path);
+    let _ = _path.file_name();
+    let _ = _path.extension();
+    return true
+}
+
 fn get_args() -> Args {
     let args: Vec<String> = env::args().collect();
 
@@ -25,6 +32,11 @@ fn get_args() -> Args {
     }
 
     let path = args[1].to_owned();
+
+    if !valid_path(path.clone()) {
+        panic!("Error: Image path invalid.")
+    }
+
     let mut top = String::from("0");
     let mut right = String::from("0");
     let mut bottom = String::from("0");
@@ -65,6 +77,25 @@ fn clean_arg(arg: &str, dim: u32) -> u32 {
     value
 }
 
+fn default_output_path_str(path: &Path) -> String {
+    // Build output image file path with "_cropped" appended
+    let ext = path.extension().unwrap().to_str().unwrap();
+    let filename = path.file_name().unwrap().to_str().unwrap();
+    let filestem = path.file_stem().unwrap().to_str().unwrap();
+    let new_file = filestem.to_owned() + "_cropped." + ext;
+    path.to_str().unwrap().replace(filename, &new_file)
+}
+
+fn output_path_str(path: &Path, output: &str) -> String {
+    let new_path_str: String;
+    if output == "" {
+        new_path_str = default_output_path_str(path);
+    } else {
+        new_path_str = output.to_owned();
+    }
+    new_path_str
+}
+
 fn crop_values(args: &Args, width: u32, height: u32) -> crop::CropValues {
     let top = clean_arg(&args.top, height);
     let right = clean_arg(&args.right, width);
@@ -74,6 +105,22 @@ fn crop_values(args: &Args, width: u32, height: u32) -> crop::CropValues {
     crop::CropValues::new(top, right, bottom, left)
 }
 
+fn crop_image(args: Args) {
+    let path = Path::new(&args.path);
+
+    let img = image::open(path).unwrap();
+    let (width, height) = img.dimensions();
+    
+    // Build path for cropped image file
+    let output_path_str = output_path_str(path, &args.output);
+    let output_path = Path::new(&output_path_str);
+    
+    // Extract pixel crop value from str args
+    let crop_values = crop_values(&args, width, height);
+    
+    crop::run(img, &crop_values, output_path);
+}
+
 fn main() {
     let args = get_args();
 
@@ -81,12 +128,5 @@ fn main() {
         println!("No crop operations specified.\nCopying image unchanged.");
     }
 
-    let path = Path::new(&args.path);
-    let img = image::open(path).unwrap();
-    let (width, height) = img.dimensions();
-    
-    // Extract pixel crop value from str args
-    let crop_values = crop_values(&args, width, height);
-
-    crop::run(img, path, &crop_values, &args.output);
+    crop_image(args);
 }
