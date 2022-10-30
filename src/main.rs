@@ -8,7 +8,7 @@ mod crop;
 #[derive(Parser, Default, Debug)]
 #[clap(author = "Tom Draper", about = "A Fast Image Cropping Tool")]
 struct Args {
-    #[arg(short, long, default_value_t = String::from("img/puppy.jpg"))]
+    #[arg(short, value_name="file path")]
     input: String,
     #[arg(short, long, default_value_t = 0.to_string())]
     top: String,
@@ -30,5 +30,8 @@ fn main() {
     let bottom = &*args.bottom;
     let left = &*args.left;
     let output = &*args.output;
+    if top == "0" && right == "0" && bottom == "0" && left == "0" {
+        println!("No crop operations specified.\nCopying image unchanged.");
+    }
     crop::run(path, top, right, bottom, left, output);
 }
