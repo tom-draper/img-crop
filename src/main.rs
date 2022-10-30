@@ -8,7 +8,7 @@ mod crop;
 #[derive(Parser, Default, Debug)]
 #[clap(author = "Tom Draper", about = "A Fast Image Cropping Tool")]
 struct Args {
-    #[arg(short, long)]
+    #[arg(short, long, default_value_t = String::from("img/puppy.jpg"))]
     input: String,
     #[arg(short, long, default_value_t = 0.to_string())]
     top: String,

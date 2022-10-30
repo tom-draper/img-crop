@@ -21,23 +21,26 @@ fn clean_arg(arg: &str, dim: u32) -> u32 {
 }
 
 pub fn run(path: &str, top: &str, right: &str, bottom: &str, left: &str, output: &str) {
-    let mut img = image::open(&Path::new(path)).unwrap();
+    let path = &Path::new(path);
+    let mut img = image::open(path).unwrap();
     let (width, height) = img.dimensions();
     
+    // Extract pixel crop value from str args
     let top = clean_arg(top, height);
     let right = clean_arg(right, width);
     let bottom = clean_arg(bottom, height);
     let left = clean_arg(left, width);
 
-    let cropped = img.crop(left,top, width-left-right, height-top-bottom);
+    let cropped = img.crop(left, top, width-left-right, height-top-bottom);
     
-    let mut path_split: Vec<&str> = path.split(&['.', '/', '\\'][..]).collect();
-    let ext = path_split.pop().unwrap();
-    let filename = path_split.pop().unwrap();
-    
+    // Build path for cropped image file
     let new_path: String;
     if output == "" {
-        new_path = path_split.join("/") + "/" + filename + "_cropped." + ext;
+        let ext = path.extension().unwrap().to_str().unwrap();
+        let filename = path.file_name().unwrap().to_str().unwrap();
+        let filestem = path.file_stem().unwrap().to_str().unwrap();
+        let new_file = filestem.to_owned() + "_cropped." + ext;
+        new_path = path.to_str().unwrap().replace(&filename, &new_file);
     } else {
         new_path = output.to_owned()
     }
