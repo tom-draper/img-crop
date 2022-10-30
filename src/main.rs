@@ -1,8 +1,10 @@
 extern crate image;
 use std::path::Path;
-use image::{DynamicImage, GenericImageView};
 use regex::Regex;
+use image::GenericImageView;
 use std::env;
+
+mod crop;
 
 /// Simple program to greet a person
 #[derive(Default, Debug)]
@@ -13,13 +15,6 @@ struct Args {
     bottom: String,
     left: String,
     output: String,
-}
-
-struct CropValues {
-    top: u32,
-    right: u32,
-    bottom: u32,
-    left: u32,
 }
 
 fn get_args() -> Args {
@@ -70,39 +65,13 @@ fn clean_arg(arg: &str, dim: u32) -> u32 {
     value
 }
 
-fn crop_values(args: &Args, width: u32, height: u32) -> CropValues {
+fn crop_values(args: &Args, width: u32, height: u32) -> crop::CropValues {
     let top = clean_arg(&args.top, height);
     let right = clean_arg(&args.right, width);
     let bottom = clean_arg(&args.bottom, height);
     let left = clean_arg(&args.left, width);
-    CropValues { top, right, bottom, left }
-}
 
-fn run(mut img: DynamicImage, path: &Path, crop_values: &CropValues, output: &str) {
-    let (width, height) = img.dimensions();
-    let cropped = img.crop(
-        crop_values.left, 
-        crop_values.top, 
-        width-crop_values.left-crop_values.right, 
-        height-crop_values.top-crop_values.bottom
-    );
-    
-    // Build path for cropped image file
-    let new_path: String;
-    if output == "" {
-        let ext = path.extension().unwrap().to_str().unwrap();
-        let filename = path.file_name().unwrap().to_str().unwrap();
-        let filestem = path.file_stem().unwrap().to_str().unwrap();
-        let new_file = filestem.to_owned() + "_cropped." + ext;
-        new_path = path.to_str().unwrap().replace(&filename, &new_file);
-    } else {
-        new_path = output.to_owned()
-    }
-    let (new_width, new_height) = cropped.dimensions();
-    println!("{}x{} -> {}x{}", width, height, new_width, new_height);
-    
-    println!("💾 {}", new_path);
-    cropped.save(new_path).unwrap();
+    crop::CropValues::new(top, right, bottom, left)
 }
 
 fn main() {
@@ -119,5 +88,5 @@ fn main() {
     // Extract pixel crop value from str args
     let crop_values = crop_values(&args, width, height);
 
-    run(img, path, &crop_values, &args.output);
+    crop::run(img, path, &crop_values, &args.output);
 }
