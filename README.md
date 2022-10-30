@@ -23,5 +23,5 @@ crop <img_path> -t 10px -r 15 -l 20%
 An optional output path can be specified with the `-o` flag. This defaults to the same directory as the input image.
 
 ```bash
-crop <img_path> -r <right> -o <output_path>
+crop <img_path> -r 40 -o <output_path>
 ```
