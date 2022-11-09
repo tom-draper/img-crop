@@ -2,6 +2,10 @@
 
 A Rust-based tool to perform fast image cropping from the command-line.
 
+<p align="center">
+	<img width="350px" src="https://user-images.githubusercontent.com/41476809/200895964-3214f737-836b-4416-b3ab-8c8230db7174.png">
+</p>
+
 ## Installation
 
 ```bash
