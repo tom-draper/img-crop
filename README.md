@@ -3,7 +3,7 @@
 A Rust-based tool to perform fast image cropping from the command-line.
 
 <p align="center">
-	<img src="https://user-images.githubusercontent.com/41476809/200961198-9a168e44-33c0-400f-809e-e66a9965894d.png">
+	<img src="https://user-images.githubusercontent.com/41476809/200961314-b923004c-75b6-4483-a771-76f2ac40302f.png">
 </p>
 
 ## Installation
